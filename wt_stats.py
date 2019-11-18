@@ -1,3 +1,4 @@
+import logging
 import os
 import shelve
 import time
@@ -6,6 +7,9 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
+
+LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
+logging.basicConfig(level=LOGLEVEL)
 
 db = shelve.open('data/wt_stats', writeback=True)
 
@@ -27,6 +31,8 @@ if __name__ == '__main__':
 
             db['stats'][int(time.time())] = stats
             db.sync()
+
+            logging.info(stats)
 
             time.sleep(60)
 
